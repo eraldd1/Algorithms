@@ -1,21 +1,13 @@
 import os
 import sys
 
-# Add required CLRS directories to the Python path
+# Adding required CLRS directories to the Python path
 base_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(base_dir)
 clrs_dir = os.path.join(parent_dir, 'clrsPython')
-chapter21_dir = os.path.join(clrs_dir, 'Chapter 21')
-utility_dir = os.path.join(clrs_dir, 'Utility functions')
-chapter6_dir = os.path.join(clrs_dir, 'Chapter 6')
-chapter10_dir = os.path.join(clrs_dir, 'Chapter 10')
-chapter2_dir = os.path.join(clrs_dir, 'Chapter 2')
-chapter19_dir = os.path.join(clrs_dir, 'Chapter 19')
 
-for path in [chapter21_dir, utility_dir, chapter6_dir, chapter10_dir, chapter2_dir, chapter19_dir]:
-    if path not in sys.path:
-        sys.path.insert(0, path)
-
+for folder in ["Chapter 21", "Utility functions", "Chapter 6", "Chapter 10", "Chapter 2", "Chapter 19"]:
+    sys.path.append(os.path.join(clrs_dir, folder))
 
 from adjacency_list_graph import AdjacencyListGraph
 from mst import kruskal, prim, get_total_weight
