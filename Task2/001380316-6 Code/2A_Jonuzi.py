@@ -3,10 +3,32 @@ import sys
 from time import perf_counter
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CLRS_DIR = os.path.join(BASE_DIR, "clrsPython")
 
-for subfolder in ["Utility functions", "Chapter 20", "Chapter 22", "Chapter 10","Chapter 6"]:
+def find_directory_upwards(start_dir, target_name, max_levels=10):
+    #search through the filesystem until it finds the clrs folder
+    current = start_dir
+
+    for _ in range(max_levels + 1):
+        candidate = os.path.join(current, target_name)
+        if os.path.isdir(candidate):
+            return candidate
+
+        parent = os.path.dirname(current)
+        if parent == current:   # reached filesystem root
+            print("CLRS folder not found")
+            break
+        current = parent
+
+    raise FileNotFoundError(
+        f"Could not find directory '{target_name}' within {max_levels} levels above {start_dir}"
+    )
+
+#look for the clrs folder above the folder the code is stored in
+CLRS_DIR = find_directory_upwards(BASE_DIR, "clrsPython", max_levels=10)
+
+for subfolder in ["Utility functions", "Chapter 20", "Chapter 22", "Chapter 10", "Chapter 6"]:
     sys.path.append(os.path.join(CLRS_DIR, subfolder))
+
 
 from adjacency_list_graph import AdjacencyListGraph
 from dijkstra import dijkstra
@@ -38,7 +60,7 @@ def run_example():
     graph, stations = build_test_graph()
 
     start_name = "A"
-    dest_name = "E"
+    dest_name = "D"
 
     #Map station names to indices using a dictionary
     name_to_index = {name: idx for idx, name in enumerate(stations)}

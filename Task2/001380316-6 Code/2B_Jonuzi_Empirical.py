@@ -3,10 +3,31 @@ import sys
 import random
 from time import perf_counter
 
+# Same import as 2a
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CLRS_DIR = os.path.join(BASE_DIR, "clrsPython")
 
-#import the required folders for the functions only
+def find_directory_upwards(start_dir, target_name, max_levels=10):
+    #search through the filesystem until it finds the clrs folder
+    current = start_dir
+
+    for _ in range(max_levels + 1):
+        candidate = os.path.join(current, target_name)
+        if os.path.isdir(candidate):
+            return candidate
+
+        parent = os.path.dirname(current)
+        if parent == current: # reached filesystem root
+            print("CLRS folder not found")
+            break
+        current = parent
+
+    raise FileNotFoundError(
+        f"Could not find directory '{target_name}' within {max_levels} levels above {start_dir}"
+    )
+
+#look for the clrs folder above the folder the code is stored in
+CLRS_DIR = find_directory_upwards(BASE_DIR, "clrsPython", max_levels=10)
+
 for subfolder in ["Utility functions", "Chapter 20", "Chapter 22", "Chapter 10", "Chapter 6"]:
     sys.path.append(os.path.join(CLRS_DIR, subfolder))
 
@@ -16,7 +37,7 @@ from dijkstra import dijkstra
 
 def empirical_performance():
     #test run sizes of graph
-    sizes = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 10000]
+    sizes = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 
     #How many Dijkstra runs per graph size
     runs_per_size = 20
